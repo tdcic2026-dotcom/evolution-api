@@ -1,5 +1,13 @@
-FROM node:20-alpine
-WORKDIR /usr/src/app
-RUN npm install -g evolution-api
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+RUN apk add --no-cache git python3 make g++
+
+RUN git clone https://github.com/EvolutionAPI/evolution-api.git .
+
+RUN npm install && npm run build
+
 EXPOSE 8080
-CMD ["evolution-api"]
+
+CMD ["npm", "run", "start:prod"]
